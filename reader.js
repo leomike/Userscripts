@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reader
 // @description  Add a TTS reader to targeted websites.
-// @version      1.00
+// @version      1.01
 // @match        https://www.bloomberg.com/*
 // @updateURL    https://raw.githubusercontent.com/leomike/Userscripts/main/reader.js
 // @downloadURL  https://raw.githubusercontent.com/leomike/Userscripts/main/reader.js
@@ -157,7 +157,7 @@
     /**Process some elements to make the spoken text flow better. */
     function tts_sanitizeText(text) {
         text = text.replace(/<\/?[^>]+(>|$)/g, ''); // Remove HTML tags
-        text = text.replace(/\.{3}/g, ''); // Remove ellipsis
+        text = text.replace(/(\.{3}|…)/g, '.'); // Remove ellipsis
 
         // Google's online TTS doesn't support long text, we break it up in parts at logical pause points
         if (document.getElementById('tts_voiceSelector').value.startsWith('Google')) {
@@ -353,34 +353,36 @@
         document.getElementsByTagName('body')[0].appendChild(ttsContainer);
 
         // Inject the stylesheet
-        var ttsStyle = document.createElement('style');
-        ttsStyle.type = 'text/css';
-        ttsStyle.innerHTML = '#tts_box { position: fixed; right: 5%; bottom: 0px; background: #fff; border-color: #767676; border-width: 1px 1px 0px 1px; border-style: solid; display: flex; align-items: center; padding: 8px; }';
-        ttsStyle.innerHTML += '#tts_parameters { display: flex; flex-direction: column; margin-right: 10px; }';
-        ttsStyle.innerHTML += '#tts_sliders { display: flex; }';
-        ttsStyle.innerHTML += '#tts_sliders > * { flex-grow: 1; }';
-        ttsStyle.innerHTML += '#tts_voiceSelector { border-radius: 5px; background: none; }';
-        ttsStyle.innerHTML += '.tts_highlight { border-radius: 10px; background: #e6faff; }';
-        ttsStyle.innerHTML += '.tts_button { border: none; margin: 2px; padding: 0px; width: 36px; height: 36px; cursor: pointer; }';
+        var style = document.createElement('style');
+        style.innerHTML = '#tts_box { position: fixed; right: 5%; bottom: 0px; background: #fff; border-color: #767676; border-width: 1px 1px 0px 1px; border-style: solid; display: flex; align-items: center; padding: 8px; }';
+        style.innerHTML += '#tts_parameters { display: flex; flex-direction: column; margin-right: 10px; }';
+        style.innerHTML += '#tts_sliders { display: flex; }';
+        style.innerHTML += '#tts_sliders > * { flex-grow: 1; }';
+        style.innerHTML += '#tts_voiceSelector { border-radius: 5px; background: none; }';
+        style.innerHTML += '.tts_highlight { border-radius: 10px; background: #e6faff; }';
+        style.innerHTML += '.tts_button { border: none; margin: 2px; padding: 0px; width: 36px; height: 36px; cursor: pointer; }';
 
         // Icons from: https://icon-sets.iconify.design/bx/
-        ttsStyle.innerHTML += "#tts_buttonParameters { background: url('https://api.iconify.design/bx/cog.svg?width=36&color=%23aaa') no-repeat center center / contain; }";
-        ttsStyle.innerHTML += "#tts_buttonBack { background: url('https://api.iconify.design/bx/skip-previous.svg?width=36') no-repeat center center / contain; }";
-        ttsStyle.innerHTML += "#tts_buttonPlayPause { background: url('https://api.iconify.design/bx/play.svg?width=36') no-repeat center center / contain; }";
-        ttsStyle.innerHTML += "#tts_buttonPlayPause.tts_pause { background: url('https://api.iconify.design/bx/pause.svg?width=36') no-repeat center center / contain; }";
-        ttsStyle.innerHTML += "#tts_buttonStop { background: url('https://api.iconify.design/bx/stop.svg?width=36') no-repeat center center / contain; }";
-        ttsStyle.innerHTML += "#tts_buttonNext { background: url('https://api.iconify.design/bx/skip-next.svg?width=36') no-repeat center center / contain; }";
-        document.getElementsByTagName('head')[0].appendChild(ttsStyle);
+        style.innerHTML += "#tts_buttonParameters { background: url('https://api.iconify.design/bx/cog.svg?width=36&color=%23aaa') no-repeat center center / contain; }";
+        style.innerHTML += "#tts_buttonBack { background: url('https://api.iconify.design/bx/skip-previous.svg?width=36') no-repeat center center / contain; }";
+        style.innerHTML += "#tts_buttonPlayPause { background: url('https://api.iconify.design/bx/play.svg?width=36') no-repeat center center / contain; }";
+        style.innerHTML += "#tts_buttonPlayPause.tts_pause { background: url('https://api.iconify.design/bx/pause.svg?width=36') no-repeat center center / contain; }";
+        style.innerHTML += "#tts_buttonStop { background: url('https://api.iconify.design/bx/stop.svg?width=36') no-repeat center center / contain; }";
+        style.innerHTML += "#tts_buttonNext { background: url('https://api.iconify.design/bx/skip-next.svg?width=36') no-repeat center center / contain; }";
+        document.getElementsByTagName('head')[0].appendChild(style);
 
         // Make sure that the TTS is not hanging from a previous page
         tts_synthesis.cancel();
     }
 
-    // Ensure there is content to display
+    // Ensure there is content to read
     if (document.getElementsByClassName('body-content')[0].children.length > 0) {
         // Only load the element once Chrome has loaded the voices
         window.speechSynthesis.onvoiceschanged = function (e) {
             tts_setup();
         };
+    }
+    else {
+        console.log('🗣️ No article to read on this page');
     }
 })();
