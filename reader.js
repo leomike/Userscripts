@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reader
 // @description  Add a TTS reader to targeted websites.
-// @version      1.01
+// @version      1.02
 // @match        https://www.bloomberg.com/*
 // @updateURL    https://raw.githubusercontent.com/leomike/Userscripts/main/reader.js
 // @downloadURL  https://raw.githubusercontent.com/leomike/Userscripts/main/reader.js
@@ -158,6 +158,7 @@
     function tts_sanitizeText(text) {
         text = text.replace(/<\/?[^>]+(>|$)/g, ''); // Remove HTML tags
         text = text.replace(/(\.{3}|…)/g, '.'); // Remove ellipsis
+        text = text.replace(/([$€£¥])([0-9., ]+)/g, '$2 $1'); // Adjust order for currencies
 
         // Google's online TTS doesn't support long text, we break it up in parts at logical pause points
         if (document.getElementById('tts_voiceSelector').value.startsWith('Google')) {
