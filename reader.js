@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reader
 // @description  Add a TTS reader to targeted websites.
-// @version      1.02
+// @version      1.03
 // @match        https://www.bloomberg.com/*
 // @updateURL    https://raw.githubusercontent.com/leomike/Userscripts/main/reader.js
 // @downloadURL  https://raw.githubusercontent.com/leomike/Userscripts/main/reader.js
@@ -355,7 +355,7 @@
 
         // Inject the stylesheet
         var style = document.createElement('style');
-        style.innerHTML = '#tts_box { position: fixed; right: 5%; bottom: 0px; background: #fff; border-color: #767676; border-width: 1px 1px 0px 1px; border-style: solid; display: flex; align-items: center; padding: 8px; }';
+        style.innerHTML = '#tts_box { position: fixed; right: 5%; bottom: 0px; background: #fff; border-color: #767676; border-width: 1px 1px 0px 1px; border-style: solid; display: flex; align-items: center; padding: 8px; z-index: 100; }';
         style.innerHTML += '#tts_parameters { display: flex; flex-direction: column; margin-right: 10px; }';
         style.innerHTML += '#tts_sliders { display: flex; }';
         style.innerHTML += '#tts_sliders > * { flex-grow: 1; }';
