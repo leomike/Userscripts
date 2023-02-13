@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bloomberg
 // @description  Adjust Bloomberg page for optimal reading experience
-// @version      2.20
+// @version      2.21
 // @match        https://www.bloomberg.com/*
 // @updateURL    https://raw.githubusercontent.com/leomike/Userscripts/main/bloomberg.js
 // @downloadURL  https://raw.githubusercontent.com/leomike/Userscripts/main/bloomberg.js
@@ -48,6 +48,13 @@
     if (content.length > 0)
         content[0].style.height = 'auto';
 
+    // Add direct link to Matt Levine
+    let opinionList = document.getElementById('opinion-submenu').getElementsByClassName('navi-sections__list-module--container')[0];
+    let opinionElement = opinionList.getElementsByTagName('li')[0].cloneNode(true);
+    opinionElement.getElementsByTagName('a')[0].href = 'https://www.bloomberg.com/opinion/authors/ARbTQlRLRjE/matthew-s-levine';
+    opinionElement.getElementsByTagName('a')[0].innerText = 'Matt Levine';
+    opinionList.appendChild(opinionElement);
+
     // Expand footnotes
     function displayFootnote(event) {
         let element = event.target;
@@ -93,7 +100,7 @@
         document.head.appendChild(style);
     }
 
-    // Change links to external websites with paywalls
+    // Change links to external websites
     let ftLinks = document.querySelectorAll('a[href^="https://www.ft.com"]');
     for (var i = 0; i < ftLinks.length; i++) {
         ftLinks[i].href = 'https://12ft.io/proxy?q=' + encodeURIComponent(ftLinks[i].href);
